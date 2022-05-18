@@ -1,6 +1,8 @@
 import { atom, selector } from "recoil";
+
 //for LocalStorage
-const getItem = window.localStorage.getItem("ourLocalItems");
+const getToDoitems = window.localStorage.getItem("toDoitems");
+const getAddedCategories = window.localStorage.getItem("addedCategories");
 
 export enum Categories {
     "TO_DO" = "TO_DO",
@@ -13,16 +15,14 @@ export interface IToDo {
     id: number;
     category: Categories;
 };
+export const toDoState = atom<IToDo[]>({
+    key: "toDo",
+    default: getToDoitems !== null ? JSON.parse(getToDoitems) : []
+});
 export const categoryState = atom<Categories>({
     key: "category",
     default: Categories.TO_DO,
 });
-
-export const toDoState = atom<IToDo[]>({
-    key: "toDo",
-    default: getItem !== null ? JSON.parse(getItem) : []
-});
-
 export const toDoSelector = selector({
     key: "toDoSelector",
     get: ({get}) => {
@@ -43,5 +43,26 @@ export interface ICategories {
 };
 export const categoriesState = atom<ICategories[]>({
     key: "categories",
-    default: getItem !== null ? JSON.parse(getItem) : [],
+    default: getAddedCategories !== null ? JSON.parse(getAddedCategories) : [],
 });
+/* For create new category */
+
+
+// For Title Category
+export const categoryTextState = atom<string>({
+    key: "categoryText",
+    default: "To Do",
+});
+
+// Theme Toggle
+export const isDarkState = atom<boolean>({
+    key: "toggletheme",
+    default: false,
+});
+
+// label show true false
+export const isShowLabelState = atom<boolean>({
+    key: "labelShow",
+    default: window.innerWidth > 480 ? true : false
+});
+

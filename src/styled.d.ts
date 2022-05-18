@@ -10,5 +10,10 @@ declare module 'styled-components' {
     boxColor: string;
     boxShadowColor: string;
     innerTabColor: string;
+    boxBdColor: string;
+    boxInnerColor: string;
+    inputBgColor: string;
+    inputBdColor: string;
+    titleColor: string;
   }
 }

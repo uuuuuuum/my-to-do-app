@@ -1,6 +1,6 @@
 import { useForm } from "react-hook-form";
-import { useRecoilState, useRecoilValue, useSetRecoilState } from "recoil";
-import { categoryState, toDoState } from "../atoms";
+import { useRecoilValue, useSetRecoilState } from "recoil";
+import { categoryState, categoryTextState, isShowLabelState, toDoState } from "../atoms";
 
 interface IForm {
     toDo: string;
@@ -9,15 +9,20 @@ interface IForm {
 function CreateToDo() {
     const setToDos = useSetRecoilState(toDoState);
     const category = useRecoilValue(categoryState);
-
+    const categoryText = useRecoilValue(categoryTextState);
     const { register, handleSubmit, setValue, formState:{ errors } } = useForm<IForm>();
+
+    //Label Show true false
+    const isShowLabel = useRecoilValue(isShowLabelState);
+
     const handleValid = ({ toDo }: IForm) => {
         setToDos(oldToDos => {
-            window.localStorage.setItem("ourLocalItems", JSON.stringify([
-                { text: toDo, id: Date.now(), category: category },
+            // 로컬스토리지에 데이터 담기 => 투두리스트용
+            window.localStorage.setItem("toDoitems", JSON.stringify([
+                { text: toDo, id: Date.now(), category: category, categoryText: categoryText },
                 ...oldToDos]));
             return [
-                { text: toDo, id: Date.now(), category: category },
+                { text: toDo, id: Date.now(), category: category, categoryText: categoryText },
                 ...oldToDos
             ]
         });
@@ -26,7 +31,7 @@ function CreateToDo() {
 
     return (
         <form onSubmit={handleSubmit(handleValid)}>
-            <label htmlFor="todo">To Do</label>
+            { isShowLabel ? <label htmlFor="todo">To Do</label> : null }
             <input id="todo" {...register("toDo", {
                 required: "Please wirte a To Do",
             })} placeholder="Write a to do" />
